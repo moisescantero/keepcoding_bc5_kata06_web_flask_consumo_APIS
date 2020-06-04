@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 import requests
 from configparser import *
+from PIL import Image, ImageTk
+from io import BytesIO
 
 config = ConfigParser()
 config.read("config.ini")
@@ -64,7 +66,10 @@ class Film(ttk.Frame):
 
         self.lblTitle = ttk.Label(self, text="Título")
         self.lblYear = ttk.Label(self, text="1900")
+        self.image = Label(self)
 
+
+        self.image.pack(side=TOP)
         self.lblTitle.pack(side=TOP)
         self.lblYear.pack(side=TOP)
 
@@ -78,6 +83,18 @@ class Film(ttk.Frame):
 
         self.lblTitle.config(text=self.__encontrada.get("titulo"))
         self.lblYear.config(text=self.__encontrada.get("anno"))
+
+        if self.__encontrada.get("poster") == "N/A":
+            return
+        
+        r = requests.get(self.__encontrada.get("poster"))
+        if r. status_code == 200:
+            bimage = r.content
+            image = Image.open(BytesIO(bimage))#transformar binario de la imagen de la web en imagen
+            self.photo = ImageTk.PhotoImage(image)#convertir la imagen para que la entienda kinter
+
+            self.image.config(image = self.photo)#inyectar imagen
+            self.image.image = self.photo
         
 
 
